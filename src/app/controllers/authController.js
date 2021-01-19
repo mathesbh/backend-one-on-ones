@@ -1,7 +1,15 @@
 const express = require('express');
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const authConfig = require('../../config/auth.json');
 
 const router = express.Router();
+
+function genereteToken(params = {}){
+    return jwt.sign(params, authConfig.secret, { expiresIn: 86400 });
+}
 
 router.post('/cadastro', async (req, res) => {
     const { email } = req.body
@@ -13,9 +21,30 @@ router.post('/cadastro', async (req, res) => {
 
         user.password = undefined;
 
-        return res.status(201).send({ user });
+        return res.status(201).send({ user, token: genereteToken({ id: user.id }) });
     } catch(err){
         return res.status(400).send({ erro: 'Cadastro falhou'});
+    }
+});
+
+router.post('/autenticacao', async (req, res) => {
+    const { email, password } = req.body;
+
+    try{
+        const user = await User.findOne({ email }).select('+password');
+
+        if(!user)
+            return res.status(400).send({ erro: 'Usuário não encontrado'});
+        
+        if(!await bcrypt.compare(password, user.password))
+            return res.status(400).send({ erro: 'Senha inválida' });
+
+        user.password = undefined;
+
+        res.status(200).send({ user, token: genereteToken({ id: user.id }) });
+
+    }catch(err){
+        return res.status(400).send({ erro: 'Falha com a autenticação' });
     }
 });
 
