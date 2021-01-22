@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const { connection } = require('../config/db.json');
 
-mongoose.connect(connection, {
+mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useFindAndModify: false,
     useCreateIndex: true,

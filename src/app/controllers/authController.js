@@ -3,13 +3,12 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const authConfig = require('../../config/auth.json');
 
 const router = express.Router();
 
 function genereteToken(params = {}){
-    return jwt.sign(params, authConfig.secret, { expiresIn: 86400 });
-}
+    return jwt.sign(params, process.env.SECRET_AUTH, { expiresIn: 86400 });
+}   
 
 router.post('/cadastro', async (req, res) => {
     const { email } = req.body
@@ -44,6 +43,7 @@ router.post('/autenticacao', async (req, res) => {
         res.status(200).send({ user, token: genereteToken({ id: user.id }) });
 
     }catch(err){
+        console.log(err)
         return res.status(400).send({ erro: 'Falha com a autenticação' });
     }
 });

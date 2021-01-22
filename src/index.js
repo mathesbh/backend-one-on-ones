@@ -1,4 +1,4 @@
-const PORT = 3001;
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors')
@@ -11,6 +11,4 @@ app.use(express.urlencoded({ extended: false }));
 
 require('./app/controllers/index')(app);
 
-app.listen(PORT, () => {
-    console.log(`Server listening at the port ${PORT}.`)
-});
+app.listen(process.env.PORT || 3001);
