@@ -1,10 +1,6 @@
 const mongoose = require('../../database');
 
 const MeetingSchema = new mongoose.Schema({
-    leaderName: {
-        type: String,
-        require: true,
-    },
     memberName: {
         type: String,
         required: true,
