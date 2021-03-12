@@ -10,11 +10,11 @@ function genereteToken(params = {}){
     return jwt.sign(params, process.env.SECRET_AUTH, { expiresIn: 86400 });
 }   
 
-router.post('/signup', async (req, res) => {
+router.post('/cadastro', async (req, res) => {
     const { email } = req.body
     try{
         if(await User.findOne({ email }))
-            return res.status(403).send({ erro: 'E-mail já cadastrado, tente com outro!' });
+            return res.status(400).send({ erro: 'Email de usuário já cadastrado' });
 
         const user = await User.create(req.body);
 
@@ -22,29 +22,30 @@ router.post('/signup', async (req, res) => {
 
         return res.status(201).send({ user, token: genereteToken({ id: user.id }) });
     } catch(err){
-        return res.status(400).send({ erro: 'Cadastro falhou!'});
+        return res.status(400).send({ erro: 'Cadastro falhou'});
     }
 });
 
-router.post('/signin', async (req, res) => {
+router.post('/autenticacao', async (req, res) => {
     const { email, password } = req.body;
 
     try{
         const user = await User.findOne({ email }).select('+password');
 
         if(!user)
-            return res.status(401).send({ erro: 'E-mail ou senha inválidos!' });
+            return res.status(400).send({ erro: 'Usuário não encontrado'});
         
         if(!await bcrypt.compare(password, user.password))
-            return res.status(401).send({ erro: 'E-mail ou senha inválidos!' });
+            return res.status(400).send({ erro: 'Senha inválida' });
 
         user.password = undefined;
 
         res.status(200).send({ user, token: genereteToken({ id: user.id }) });
 
     }catch(err){
-        return res.status(403).send({ erro: 'Falha na autenticação!' });
+        console.log(err)
+        return res.status(400).send({ erro: 'Falha com a autenticação' });
     }
 });
 
-module.exports = app => app.use('/authenticate', router);
+module.exports = app => app.use('/auth', router);
