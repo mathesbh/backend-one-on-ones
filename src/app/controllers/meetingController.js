@@ -13,7 +13,7 @@ router.get('/', async(req, res) => {
         return res.status(200).send({ meetings });
 
     }catch(err){
-        return res.status(400).send({ erro: 'Erro na listagem dos encontros'});
+        return res.status(404).send({ erro: 'Não foi possível listar encontros!' });
     }
 });
 
@@ -24,9 +24,8 @@ router.post('/', async (req, res) => {
         return res.status(201).send({ meeting });
 
     } catch(err){
-        console.log(err)
-        return res.status(400).send({ erro: 'Erro na criação de um novo encontro'});
+        return res.status(400).send({ erro: 'Não foi possível criar encontro!' });
     }
 });
 
-module.exports = app => app.use('/encontros', router);
+module.exports = app => app.use('/meetings', router);

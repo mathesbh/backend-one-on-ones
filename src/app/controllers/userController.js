@@ -12,7 +12,7 @@ router.get('/', async(req, res) => {
 
     return res.status(200).send({ users });
   }catch(err){
-    return res.status(400).send({ erro: 'Erro ao encontrar usuários' });
+    return res.status(404).send({ erro: 'Erro ao encontrar usuários!' });
   }
 });
 
