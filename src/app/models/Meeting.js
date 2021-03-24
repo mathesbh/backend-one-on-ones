@@ -1,21 +1,27 @@
 const mongoose = require('../../database');
 
 const MeetingSchema = new mongoose.Schema({
-    memberName: {
+    meetWith: {
         type: String,
         required: true,
     },
-    user: {
+    assignedTo: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },
-    scheduled: {
-        type: Date,
+    completed: {
+        type: Boolean,
+        required: true,
+        default: false,
     },
     createdAt: {
         type: Date,
         default: Date.now,
+    },
+    scheduledTo: {
+        type: Date,
+        required: true,
     },
 });
 
