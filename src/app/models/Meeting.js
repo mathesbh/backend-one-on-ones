@@ -1,11 +1,11 @@
 const mongoose = require('../../database');
 
 const MeetingSchema = new mongoose.Schema({
-    meetWith: {
+    assignedTo: {
         type: String,
         required: true,
     },
-    assignedTo: {
+    meetWith: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
