@@ -8,7 +8,7 @@ router.use(authMiddleware);
 
 router.get('/', async(req, res) => {
     try{
-        const meetings = await Meeting.find().populate('user');
+        const meetings = await Meeting.find().populate('meetWith');
 
         return res.status(200).send({ meetings });
 
